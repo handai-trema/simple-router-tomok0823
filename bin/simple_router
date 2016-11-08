@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler'
+Bundler.setup :default
+
+require 'gli'
+require 'trema'
+
+module SimpleRouterApp
+  extend GLI::App
+
+  include Pio
+  desc 'Shows a routing table'
+
+  command :show_table do |c|
+    c.desc 'Location to find socket files'
+    c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
+
+    c.action do |_global_options, options, args|
+      print "\nShow routing table\n\n"
+      print "destination/netmask_length\t next_hop\n"
+      @routing_table = Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.show_table()
+
+      @routing_table.each do |each|
+        each.each_key do |key, value|
+          print IPv4Address.new(key).to_s,"/",@routing_table.index(each).to_s,"\t\t\t",each[key].to_s,"\n"
+        end
+      end
+    end
+  end
+
+  desc 'Adds a entry of routing table'
+  arg_name 'destination_ip netmask_length next_hop'
+  command :add_entry do |c|
+    c.desc 'Location to find socket files'
+    c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
+
+    c.action do |_global_options, options, args|
+      destination_ip = args[0]
+      netmask_length = args[1].to_i
+      next_hop = args[2]
+      Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
+        add_entry(destination_ip, nwtmask_length, next_hop)
+    end
+  end
+
+  desc 'Deletes a entry of routing table'
+  arg_name 'destination_ip netmask_length'
+  command :delete_entry do |c|
+    c.desc 'Location to find socket files'
+    c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
+    c.action do |_global_options, options, args|
+      destination_ip = args[0]
+      netmask_length = args[1].to_i
+      Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
+        delete_entry(destination_ip, netmask_length)
+    end
+  end
+
+  desc 'Shows a list of interface'
+  arg_name 'interface'
+  command :show_interface do |c|
+    c.desc 'Location to find socket files'
+    c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
+    c.action do |_global_options, options, args|
+      interface = args[0]
+      Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
+        show_interface()
+    end
+  end
+
+  exit run(ARGV)
+end

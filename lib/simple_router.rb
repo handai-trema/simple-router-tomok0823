@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'arp_table'
 require 'interface'
 require 'routing_table'
@@ -89,6 +90,10 @@ class SimpleRouter < Trema::Controller
   end
   # rubocop:enable MethodLength
 
+  def show_table()
+    return @routing_table.show()
+  end
+
   private
 
   def sent_to_router?(packet_in)
@@ -173,5 +178,18 @@ class SimpleRouter < Trema::Controller
                     raw_data: arp_request.to_binary,
                     actions: SendOutPort.new(interface.port_number))
   end
+
+  def add_entry(destination_ip, netmask_length, next_hop)
+    #エントリーの追加
+  end
+
+  def delete_entry(destination_ip, netmask_length)
+    #エントリーの削除
+  end
+
+  def show_interface(interface)
+    #インタフェース一覧の表示
+  end
+
 end
 # rubocop:enable ClassLength

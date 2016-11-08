@@ -15,6 +15,10 @@ class RoutingTable
     @db[netmask_length][prefix.to_i] = IPv4Address.new(options.fetch(:next_hop))
   end
 
+  def show()
+    return @db
+  end
+
   def lookup(destination_ip_address)
     MAX_NETMASK_LENGTH.downto(0).each do |each|
       prefix = destination_ip_address.mask(each)
