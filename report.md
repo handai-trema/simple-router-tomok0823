@@ -84,3 +84,5 @@ destination/netmask_length	 next_hop
 ```
 
 以上より，実装したルーティングテーブルの内容を出力するコマンド ```show_table``` が正しく動作することが確認できた．
+
+###未完成
