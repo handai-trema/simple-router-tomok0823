@@ -94,6 +94,15 @@ class SimpleRouter < Trema::Controller
     return @routing_table.show()
   end
 
+  def add_entry(destination_ip, netmask_length, next_hop)
+    @routing_table.add({:destination => destination_ip, :netmask_length => netmask_length, :next_hop => next_hop})
+  end
+
+  def delete_entry(destination_ip, netmask_length)
+    @routing_table.delete_table({:destination => destination_ip, :netmask_length => netmask_length})
+  end
+
+
   private
 
   def sent_to_router?(packet_in)
@@ -179,13 +188,6 @@ class SimpleRouter < Trema::Controller
                     actions: SendOutPort.new(interface.port_number))
   end
 
-  def add_entry(destination_ip, netmask_length, next_hop)
-    #エントリーの追加
-  end
-
-  def delete_entry(destination_ip, netmask_length)
-    #エントリーの削除
-  end
 
   def show_interface(interface)
     #インタフェース一覧の表示

@@ -41,12 +41,12 @@ module SimpleRouterApp
       netmask_length = args[1].to_i
       next_hop = args[2]
       Trema.trema_process('SimpleRouter', options[:socket_dir]).controller.
-        add_entry(destination_ip, nwtmask_length, next_hop)
+        add_entry(destination_ip, netmask_length, next_hop)
     end
   end
 
   desc 'Deletes a entry of routing table'
-  arg_name 'destination_ip netmask_length'
+  arg_name 'destination_ip, netmask_length'
   command :delete_entry do |c|
     c.desc 'Location to find socket files'
     c.flag [:S, :socket_dir], default_value: Trema::DEFAULT_SOCKET_DIR
